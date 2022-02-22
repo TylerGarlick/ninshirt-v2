@@ -1,0 +1,130 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Configuration {
+  id       Int     @id @default(autoincrement())
+  name     String
+  version  String?
+  settings Json
+  isActive Boolean @default(true)
+}
+
+model Account {
+  id       Int     @id @default(autoincrement())
+  name     String
+  username String
+  email    String  @unique
+  wallet   String?
+  profile  Json
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  roles     Role[]
+  addresses Address[]
+  orders    Order[]
+  phones    Phone[]
+}
+
+model Address {
+  id               Int      @id @default(autoincrement())
+  accountId        Int
+  name             String
+  street_address   String
+  street_address_2 String?
+  street_address_3 String?
+  city             String
+  state            String
+  zipcode          String
+  country          String
+  longitute        Decimal? @default(0.0)
+  latitude         Decimal? @default(0.0)
+  isActive         Boolean  @default(true)
+  isPrimary        Boolean  @default(true)
+  notes            String?
+  account          Account  @relation(fields: [accountId], references: [id])
+  Order            Order[]
+}
+
+model Phone {
+  id          Int       @id @default(autoincrement())
+  accountId   Int
+  kind        PhoneKind @default(MOBILE)
+  name        String
+  prefix      String?
+  phoneNumber String
+  extension   String?
+  isActive    Boolean   @default(true)
+  isPrimary   Boolean   @default(true)
+  account     Account   @relation(fields: [accountId], references: [id])
+  Order       Order[]
+}
+
+model Order {
+  id        Int         @id @default(autoincrement())
+  accountId Int
+  addressId Int
+  status    OrderStatus @default(NEW)
+
+  price Decimal
+
+  shippingName    String
+  shippingAddress Address @relation(fields: [addressId], references: [id])
+  shippingPhone   String
+  shippingEmail   String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  account Account     @relation(fields: [accountId], references: [id])
+  items   OrderItem[]
+
+
+  Phone   Phone? @relation(fields: [phoneId], references: [id])
+  phoneId Int?
+}
+
+model OrderItem {
+  id           Int     @id @default(autoincrement())
+  orderId      Int
+  name         String
+  description  String?
+  price        Decimal
+  retail_price Decimal
+  sku          String?
+
+  quantity Int     @default(1)
+  subtotal Decimal
+  order    Order   @relation(fields: [orderId], references: [id])
+
+}
+
+enum Role {
+  ADMIN
+  ARTIST
+  USER
+}
+
+enum PhoneKind {
+  MOBILE
+  HOME
+  OFFICE
+  OTHER
+}
+
+enum OrderStatus {
+  NEW
+  CHECKOUT
+  PRE_AUTH
+  POST_AUTH
+  PENDING
+  EXCEPTION
+  COMPLETE
+}

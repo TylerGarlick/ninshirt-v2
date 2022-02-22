@@ -1,0 +1,30 @@
+{
+  "name": "ninshirt",
+  "version": "1.0.0",
+  "description": "",
+  "dependencies": {
+    "@prisma/client": "^3.10.0"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.19",
+    "prisma": "^3.10.0",
+    "typescript": "^4.5.5"
+  },
+  "scripts": {
+    "prisma:studio": "npx prisma studio",
+    "prisma:migrate:dev": "npx prisma migrate dev",
+    "prisma:db:pull": "npx prisma db pull",
+    "prisma:db:push": "npx prisma db push"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TylerGarlick/ninshirt-v2.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TylerGarlick/ninshirt-v2/issues"
+  },
+  "homepage": "https://github.com/TylerGarlick/ninshirt-v2#readme"
+}
